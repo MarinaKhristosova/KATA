@@ -20,6 +20,7 @@ public class main {
         }
         return false;
     }
+
     public static boolean isArabic(String input) {
         for (int i = 0; i < input.length(); i++) {
             char symbol = input.charAt(i);
@@ -29,23 +30,28 @@ public class main {
         }
         return false;
     }
+
     public static String calc(String input) {
-        String[] numbers = input.split("\\W");// сделать проверку 2 числа
-        String[] operator = input.split("\\w");//оператор 1
+        String[] numbers = input.split("\\W");
+        String[] operator = input.split("\\w");
+
+        if ((numbers.length != 2) || (operator.length != 1)) {
+            throw new IllegalArgumentException("Invalid input");
+        }
 
         Arrays.sort(operator, Comparator.reverseOrder());
         String op = operator[0];
         String result = "";
         if (isArabic(input)) {
-            result = calcArabic(numbers[0],numbers[1],(op));
+            result = calcArabic(numbers[0], numbers[1], (op));
         } else {
-            result = calcRoman(numbers[0],numbers[1],(op));
+            result = calcRoman(numbers[0], numbers[1], (op));
         }
         return result;
     }
 
     private static String calcArabic(String num1, String num2, String op) {
-        if (isEmpty(num1) || isEmpty(num2)||isEmpty(op)) {
+        if (isEmpty(num1) || isEmpty(num2) || isEmpty(op)) {
             throw new IllegalArgumentException("Invalid input");
         }
         if ((Integer.parseInt(num1) > 10) || (Integer.parseInt(num2) > 10)) {
@@ -53,19 +59,22 @@ public class main {
         }
         return String.valueOf(calculate(Integer.parseInt(num1), Integer.parseInt(num2), (op)));
     }
-    private static String calcRoman(String num1,String num2,String op ){
+
+    private static String calcRoman(String num1, String num2, String op) {
         int romNum1 = romanToArabic(num1);
         int romNum2 = romanToArabic(num2);
         String arabicNumber = String.valueOf(calculate(Integer.parseInt(String.valueOf(romNum1)), Integer.parseInt(String.valueOf(romNum2)), (op)));
         return convertNumToRoman(arabicNumber);
     }
+
     public static int romanToArabic(String romNum) {
-        try{
-        return Roman.valueOf(romNum).getValue();}
-        catch (IllegalArgumentException e){
-            throw new IllegalArgumentException ("Unsupported Roman number/s '"+romNum+"'");
+        try {
+            return Roman.valueOf(romNum).getValue();
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Unsupported Roman number/s '" + romNum + "'");
         }
     }
+
     private static int calculate(int romNum1, int romNum2, String op) {
         switch (op) {
             case "*":
@@ -77,11 +86,12 @@ public class main {
             case "/":
                 return romNum1 / romNum2;
             default:
-                throw new IllegalArgumentException ("Unsupported operator '"+op+"'");
+                throw new IllegalArgumentException("Unsupported operator '" + op + "'");
         }
     }
+
     private static String convertNumToRoman(String result) {
         String[] roman = {"O", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL", "XLI", "XLII", "XLIII", "XLIV", "XLV", "XLVI", "XLVII", "XLVIII", "XLIX", "L", "LI", "LII", "LIII", "LIV", "LV", "LVI", "LVII", "LVIII", "LIX", "LX", "LXI", "LXII", "LXIII", "LXIV", "LXV", "LXVI", "LXVII", "LXVIII", "LXIX", "LXX", "LXXI", "LXXII", "LXXIII", "LXXIV", "LXXV", "LXXVI", "LXXVII", "LXXVIII", "LXXIX", "LXXX", "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI", "LXXXVII", "LXXXVIII", "LXXXIX", "XC", "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"};
         return roman[Integer.parseInt(result)];
-         }
+    }
 }
